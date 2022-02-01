@@ -32,7 +32,7 @@ async function getAllProducts(){
 async function getProductById(id){
     const conn = await connect();
     
-    const query = `SELECT * FROM products WHERE id = "${id}";`;
+    const query = `SELECT * FROM products WHERE 'id' = ?;";`;
     console.log(`Executando query: ${query}`);
     
     const [rows, fields] = await connection.execute(query);
@@ -45,7 +45,7 @@ async function updateProductById(id, name, description, value){
     try{
         const conn = await connect();
     
-        const query = `UPDATE products SET name = "${name}", description = "${description}", value = ${value} WHERE id = "${id}";`;
+        const query = "UPDATE products SET name = ?; , description = ?;, value = ?; WHERE id = ?;";
         console.log(`Executando query: ${query}`);
         
         const [rows] = await conn.execute(query);
@@ -58,7 +58,7 @@ async function updateProductById(id, name, description, value){
 async function deleteProductById(id){
     const conn = await connect();
     
-    const query = `DELETE FROM products WHERE id = "${id}";`;
+    const query = "DELETE FROM products WHERE id = ?;";
     console.log(`Executando query: ${query}`);
 
     await connection.execute(query);

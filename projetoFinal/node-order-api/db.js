@@ -30,7 +30,7 @@ async function getAllOrders(){
 async function getOrderById(id){
     const conn = await connect();
     
-    const query = `SELECT * FROM orders WHERE id = "${id}";`;
+    const query = `SELECT * FROM orders WHERE id = ?;`;
     console.log(`Executando query: ${query}`);
     
     const [rows, fields] = await connection.execute(query);
@@ -41,7 +41,7 @@ async function getOrderById(id){
 async function getOrderByClientId(id){
     const conn = await connect();
     
-    const query = `SELECT * FROM orders WHERE client_id = "${id}";`;
+    const query = `SELECT * FROM orders WHERE client_id = ?;`;
     console.log(`Executando query: ${query}`);
     
     const [rows, fields] = await connection.execute(query);
@@ -53,7 +53,7 @@ async function updateOrderById(id, clientId, productId, amount){
     try{
         const conn = await connect();
     
-        const query = `UPDATE orders SET client_id = "${clientId}", product_id = "${productId}", amount = ${amount} WHERE id = "${id}";`;
+        const query = `UPDATE orders SET client_id = ?;, product_id = ?;, amount = ?; WHERE id = ?;`;
         console.log(`Executando query: ${query}`);
         
         const [rows] = await conn.execute(query);
@@ -66,7 +66,7 @@ async function updateOrderById(id, clientId, productId, amount){
 async function deleteOrderById(id){
     const conn = await connect();
     
-    const query = `DELETE FROM orders WHERE id = "${id}";`;
+    const query = `DELETE FROM orders WHERE id = ?;`;
     console.log(`Executando query: ${query}`);
 
     await connection.execute(query);
