@@ -30,7 +30,7 @@ async function getAllOrders(){
 async function getOrderById(id){
     const conn = await connect();
     
-    const query = `SELECT * FROM orders WHERE id = "${id}";`;
+    const query = `SELECT * FROM orders WHERE id = ?;`;
     console.log(`Executando query: ${query}`);
     
     const [rows, fields] = await connection.execute(query);
@@ -41,7 +41,7 @@ async function getOrderById(id){
 async function getOrderByClientId(id){
     const conn = await connect();
     
-    const query = `SELECT * FROM orders WHERE client_id = "${id}";`;
+    const query = `SELECT * FROM orders WHERE client_id = ?;`;
     console.log(`Executando query: ${query}`);
     
     const [rows, fields] = await connection.execute(query);
@@ -53,7 +53,7 @@ async function updateOrderById(id, clientId, productId, amount){
     try{
         const conn = await connect();
     
-        const query = `UPDATE orders SET client_id = "${clientId}", product_id = "${productId}", amount = ${amount} WHERE id = "${id}";`;
+        const query = `UPDATE orders SET client_id = ?;, product_id = ?;, amount = ?; WHERE id = ?;`;
         console.log(`Executando query: ${query}`);
         
         const [rows] = await conn.execute(query);
@@ -66,20 +66,22 @@ async function updateOrderById(id, clientId, productId, amount){
 async function deleteOrderById(id){
     const conn = await connect();
     
-    const query = `DELETE FROM orders WHERE id = "${id}";`;
+    const query = `DELETE FROM orders WHERE id = ?;`;
     console.log(`Executando query: ${query}`);
 
     await connection.execute(query);
 }
 
-async function insertOrder(id, clientId, productId, amount){
+async function insertOrder(id, clientId, productId, amount, password){
     const conn = await connect();
-
-    const query = `INSERT INTO orders(id, client_id, product_id, amount) VALUES ("${id}", "${clientId}", "${productId}", ${amount});`;
+    const users = await db.selectUserByLogin(req.body.username);
+    const query = `INSERT INTO orders(id, client_id, product_id, amount) VALUES (?, ?, ?, ?;`;
     console.log(`Executando query: ${query}`);
 
     try{
         await connection.execute(query);
+        const [rows, fields] = await connection.execute(query, [randomUUID(), user, password]);
+        return rows;
     }catch(err){
         if(err.errno === 1062){
             throw {code: 400, message: 'Já existe um pedido cadastrado com este id!'};
