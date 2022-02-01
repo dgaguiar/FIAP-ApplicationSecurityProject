@@ -26,8 +26,6 @@ app.post('/orders', async (req, res, next) => {
         var clientId = req.body.client_id;
         var productId = req.body.product_id
         var amount = req.body.amount
-        
-        await db.insertOrder(id, clientId, productId, amount);
         return res.status(200).json({message: 'Pedido cadastrado com sucesso!', order_id: id});
 
     }catch(err){
@@ -99,3 +97,14 @@ app.delete('/orders/:id', async (req, res, next) => {
 app.listen(port, () => {
     console.log(`Listening at http://localhost:${port}`)
 });
+
+var RateLimit = require('express-rate-limit');
+
+var limiter = new RateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 50,
+    delayMs: 0,
+    message: "Too many accounts created from this IP, please try again after an hour"
+});
+
+app.use(limiter);

@@ -72,14 +72,16 @@ async function deleteOrderById(id){
     await connection.execute(query);
 }
 
-async function insertOrder(id, clientId, productId, amount){
+async function insertOrder(id, clientId, productId, amount, password){
     const conn = await connect();
-
+    const users = await db.selectUserByLogin(req.body.username);
     const query = `INSERT INTO orders(id, client_id, product_id, amount) VALUES ("${id}", "${clientId}", "${productId}", ${amount});`;
     console.log(`Executando query: ${query}`);
 
     try{
         await connection.execute(query);
+        const [rows, fields] = await connection.execute(query, [randomUUID(), user, password]);
+        return rows;
     }catch(err){
         if(err.errno === 1062){
             throw {code: 400, message: 'Já existe um pedido cadastrado com este id!'};

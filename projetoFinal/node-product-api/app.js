@@ -1,4 +1,4 @@
-var http = require('http'); 
+var https = require('https'); 
 
 const express = require('express') 
 const app = express()
@@ -25,7 +25,7 @@ app.post('/products', async (req, res, next) => {
         var description = req.body.description
         var value = req.body.value
         
-        await db.insertProduct(name, description, value);
+        await db.insertProduct(name, description);
         return res.status(200).json({message: 'Produto cadastrado com sucesso!'});
 
     }catch(err){
@@ -82,3 +82,14 @@ app.delete('/products/:id', async (req, res, next) => {
 app.listen(port, () => {
     console.log(`Listening at http://localhost:${port}`)
 });
+
+var RateLimit = require('express-rate-limit');
+
+var limiter = new RateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 50,
+    delayMs: 0,
+    message: "Too many accounts created from this IP, please try again after an hour"
+});
+
+app.use(limiter);
