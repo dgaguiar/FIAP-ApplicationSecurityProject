@@ -23,6 +23,17 @@ app.use(function(req, res, next) {
     next();
 });
 
+var RateLimit = require('express-rate-limit');
+
+var limiter = new RateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 50,
+    delayMs: 0,
+    message: "Too many accounts created from this IP, please try again after an hour"
+});
+
+app.use(limiter);
+
 const express = require('express')
 const app = express()
 const port = 3002
@@ -125,14 +136,3 @@ app.delete('/orders/:id', checkJwt, checkScopes, async (req, res, next) => {
 app.listen(port, () => {
     console.log(`Listening at http://localhost:${port}`)
 });
-
-var RateLimit = require('express-rate-limit');
-
-var limiter = new RateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 50,
-    delayMs: 0,
-    message: "Too many accounts created from this IP, please try again after an hour"
-});
-
-app.use(limiter);

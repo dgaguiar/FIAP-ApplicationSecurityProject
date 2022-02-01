@@ -46,7 +46,7 @@ var host = process.env.DOCKER_HOST_IP || 'http://localhost'
 
 app.get('/products', checkJwt, checkScopes, async (req, res, next) => {
     request(`${host}:3001/products`, function (err, body) {
-        return res.json(JSON.parse(body.body));
+        return res.json(JSON.parse(body.body)).send({ auth: true, token: token });
     });
 });
 
@@ -63,7 +63,7 @@ app.post('/buy', checkJwt, checkScopes, async (req, res, next) => {
             console.log(response.statusCode, body);
             var resp = JSON.parse(body);
             resp.status = response.statusCode;
-            return res.json(resp).send({ auth: true, token: token });;
+            return res.json(resp).send({ auth: true, token: token });
         }
     });
 });

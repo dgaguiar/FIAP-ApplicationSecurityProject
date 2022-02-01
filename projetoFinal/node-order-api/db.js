@@ -75,7 +75,7 @@ async function deleteOrderById(id){
 async function insertOrder(id, clientId, productId, amount, password){
     const conn = await connect();
     const users = await db.selectUserByLogin(req.body.username);
-    const query = `INSERT INTO orders(id, client_id, product_id, amount) VALUES ("${id}", "${clientId}", "${productId}", ${amount});`;
+    const query = `INSERT INTO orders(id, client_id, product_id, amount) VALUES (?, ?, ?, ?;`;
     console.log(`Executando query: ${query}`);
 
     try{
